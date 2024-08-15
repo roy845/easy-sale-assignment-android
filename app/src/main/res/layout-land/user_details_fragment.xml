@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_details_fragment_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/lines"
+    android:focusable="true"
+    android:clickable="true"
+    tools:context="com.example.easysaleassignment.ui.fragments.UserDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Avatar -->
+        <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Header: Display the first name and last name -->
+        <TextView
+            android:id="@+id/user_name_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- EditText for Email -->
+        <EditText
+            android:id="@+id/edit_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- EditText for First Name -->
+        <EditText
+            android:id="@+id/edit_text_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="First Name"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/white"
+            android:inputType="textPersonName"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- EditText for Last Name -->
+        <EditText
+            android:id="@+id/edit_text_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Last Name"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:inputType="textPersonName"
+            android:background="@drawable/edit_text_border"
+            android:padding="8dp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="24dp">
+
+            <!-- Cancel Button -->
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:backgroundTint="#fa1905"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Update Button -->
+            <Button
+                android:id="@+id/button_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0760a8"
+                android:text="Update" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

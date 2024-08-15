@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Users Management</string>
+    <string name="fab_description">Add User</string>">
+    <string name="delete_all">Delete all users</string>">
+    <string name = "search_hint">Search users…</string>
+    <string name = "empty_results_description">Empty Results Image</string>
+    <string name = "no_search_results_found">No search results found!</string>
+    <string name = "something_went_wrong">Something went wrong!</string>
+    <string name = "error_image_description">Error Image description</string>
+    <string name = "retry">  Retry</string>
+
+</resources>
