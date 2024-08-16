@@ -3,6 +3,7 @@ package com.example.easysaleassignment.ui.fragments;
 import android.content.Intent;
 
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,16 +27,20 @@ import com.example.easysaleassignment.data.local.UserEntity;
 import com.example.easysaleassignment.utils.ValidationUtils;
 import com.example.easysaleassignment.viewmodels.UsersViewModel;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class UserDetailsFragment extends Fragment {
 
 
     private ImageView userAvatarImageView;
-    private TextView userNameTextView;
+    private TextView userNameTextView,emailLabelTextView,firstNameLabelTextView,lastNameLabelTextView;
     private Button updateButton, cancelButton;
     private EditText userEmailEditText, firstNameEditText, lastNameEditText;
     UsersViewModel usersViewModel;
     private Uri selectedImageUri;
+    private TextView errorFirstNameTextView, errorLastNameTextView,editUserTextView;
+
 
     @Nullable
     @Override
@@ -48,15 +53,8 @@ public class UserDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         initViews(view);
         setupViewModel();
-
-        Observer<UserEntity> userListUpdateObserver = selectedUser -> {
-            if (selectedUser != null) {
-                loadUserDetails(selectedUser);
-            }
-        };
-
-        usersViewModel.getItemSelected().observe(getViewLifecycleOwner(), userListUpdateObserver);
-
+        hideViewsAtStartup();
+        observeSelectedUser();
         initCancelButtonClickListener();
         initUpdateButtonClickListener();
         initAvatarClickListener();
@@ -64,32 +62,68 @@ public class UserDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+
+    private void hideViewsAtStartup(){
+        editUserTextView.setVisibility(View.GONE);
+        emailLabelTextView.setVisibility(View.GONE);
+        firstNameLabelTextView.setVisibility(View.GONE);
+        lastNameLabelTextView.setVisibility(View.GONE);
+        userAvatarImageView.setVisibility(View.GONE);
+        userNameTextView.setVisibility(View.GONE);
+        userEmailEditText.setVisibility(View.GONE);
+        firstNameEditText.setVisibility(View.GONE);
+        lastNameEditText.setVisibility(View.GONE);
+        updateButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
+    }
+
+    private void observeSelectedUser() {
+        Observer<UserEntity> userListUpdateObserver = selectedUser -> {
+            if (selectedUser != null) {
+                loadUserDetails(selectedUser);
+            }
+        };
+
+        usersViewModel.getItemSelected().observe(getViewLifecycleOwner(), userListUpdateObserver);
+    }
+
     private void loadUserDetails(UserEntity selectedUser){
         if(selectedUser.getFirst_name()!=null && selectedUser.getLast_name() != null){
+            userNameTextView.setVisibility(View.VISIBLE);
             userNameTextView.setText(selectedUser.getFirst_name() + " " + selectedUser.getLast_name());
         }else{
             userNameTextView.setVisibility(View.GONE);
         }
 
         if(selectedUser.getEmail()!=null){
+            emailLabelTextView.setVisibility(View.VISIBLE);
+            userEmailEditText.setVisibility(View.VISIBLE);
             userEmailEditText.setText(selectedUser.getEmail());
         }else{
             userEmailEditText.setVisibility(View.GONE);
+            emailLabelTextView.setVisibility(View.GONE);
         }
 
         if(selectedUser.getFirst_name()!=null){
+            firstNameLabelTextView.setVisibility(View.VISIBLE);
+            firstNameEditText.setVisibility(View.VISIBLE);
             firstNameEditText.setText(selectedUser.getFirst_name());
         }else{
             firstNameEditText.setVisibility(View.GONE);
+            firstNameLabelTextView.setVisibility(View.GONE);
         }
 
         if(selectedUser.getLast_name()!=null){
-            lastNameEditText.setText(selectedUser.getFirst_name());
+            lastNameEditText.setVisibility(View.VISIBLE);
+            lastNameLabelTextView.setVisibility(View.VISIBLE);
+            lastNameEditText.setText(selectedUser.getLast_name());
         }else{
+            lastNameLabelTextView.setVisibility(View.GONE);
             lastNameEditText.setVisibility(View.GONE);
         }
 
         if(selectedUser.getAvatar()!=null){
+            userAvatarImageView.setVisibility(View.VISIBLE);
             Glide.with(UserDetailsFragment.this)
                     .load(selectedUser.getAvatar())
                     .into(userAvatarImageView);
@@ -98,8 +132,13 @@ public class UserDetailsFragment extends Fragment {
         }
 
         if(selectedUser.getFirst_name() == null){
+            editUserTextView.setVisibility(View.GONE);
             updateButton.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
+        }else{
+            editUserTextView.setVisibility(View.VISIBLE);
+            updateButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
         }
 
     }
@@ -112,7 +151,12 @@ public class UserDetailsFragment extends Fragment {
         lastNameEditText = view.findViewById(R.id.edit_text_last_name);
         updateButton = view.findViewById(R.id.button_update);
         cancelButton = view.findViewById(R.id.button_cancel);
-
+        editUserTextView = view.findViewById(R.id.update_user_title);
+        emailLabelTextView = view.findViewById(R.id.label_email);
+        firstNameLabelTextView = view.findViewById(R.id.label_first_name);
+        lastNameLabelTextView = view.findViewById(R.id.label_last_name);
+        errorFirstNameTextView = view.findViewById(R.id.error_label_first_name_update_user);
+        errorLastNameTextView = view.findViewById(R.id.error_label_last_name_update_user);
     }
 
     private void setupViewModel() {
@@ -123,51 +167,79 @@ public class UserDetailsFragment extends Fragment {
     private void initUpdateButtonClickListener() {
         updateButton.setOnClickListener(v -> {
             UserEntity updatedUser = usersViewModel.getItemSelected().getValue();
-
             if (updatedUser != null) {
-                String firstName = firstNameEditText.getText().toString();
-                String lastName = lastNameEditText.getText().toString();
-                String email = userEmailEditText.getText().toString();
+                String firstName = firstNameEditText.getText().toString().trim();
+                String lastName = lastNameEditText.getText().toString().trim();
+                String email = userEmailEditText.getText().toString().trim();
 
-                // Validate the fields
-                if (!ValidationUtils.validateFieldsUpdateUser(firstName,lastName,email)) {
-                    Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                AtomicBoolean hasError = new AtomicBoolean(false);
 
-                // Validate the email
-                if (!ValidationUtils.isValidEmail(email)) {
-                    Toast.makeText(getContext(), "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    // Validate first name
+                    if (!ValidationUtils.validateFirstName(firstName)) {
+                        errorFirstNameTextView.setVisibility(View.VISIBLE);
+                        hasError.set(true);
+                    } else {
+                        errorFirstNameTextView.setVisibility(View.GONE);
+                    }
 
-                // Update the user with the new data from the EditTexts
-                updatedUser.setFirst_name(firstName);
-                updatedUser.setLast_name(lastName);
-                updatedUser.setEmail(email); // Correctly set the email
-                if (selectedImageUri != null) {
-                    updatedUser.setAvatar(selectedImageUri.toString()); // Update the avatar URI
-                }
+                    // Validate last name
+                    if (!ValidationUtils.validateLastname(lastName)) {
+                        errorLastNameTextView.setVisibility(View.VISIBLE);
+                        hasError.set(true);
+                    } else {
+                        errorLastNameTextView.setVisibility(View.GONE);
+                    }
 
-                // Notify ViewModel of the changes
-                usersViewModel.updateUser(updatedUser);
+                    // If there are errors, return early
+                    if (hasError.get()) {
+                        Toast.makeText(getContext(), "Please correct the errors and try again.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                // Pop the fragment from the back stack
-                if (getActivity() != null) {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
+                    // No errors, proceed with updating the user
+                    updatedUser.setFirst_name(firstName);
+                    updatedUser.setLast_name(lastName);
+                    updatedUser.setEmail(email);
+
+                    if (selectedImageUri != null) {
+                        updatedUser.setAvatar(selectedImageUri.toString());
+                    }
+
+                    usersViewModel.updateUser(updatedUser);
+
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        UserEntity nullUser = new UserEntity(-1, null, null, null, null);
+                        usersViewModel.setItemSelect(nullUser);
+                    } else {
+                        if (getActivity() != null) {
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    }
+
             }
         });
     }
 
 
 
+
     private void initCancelButtonClickListener() {
         cancelButton.setOnClickListener(v -> {
-            // Pop the fragment from the back stack
-            if (getActivity() != null) {
-                getActivity().getSupportFragmentManager().popBackStack();
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (getActivity() != null) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+                UserEntity nullUser = new UserEntity(-1,null,null,null,null);
+                usersViewModel.setItemSelect(nullUser);
+
+            }else{
+                // Pop the fragment from the back stack
+                if (getActivity() != null) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
             }
+
         });
     }
 

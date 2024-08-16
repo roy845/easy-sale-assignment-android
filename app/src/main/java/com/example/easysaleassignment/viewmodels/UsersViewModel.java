@@ -37,18 +37,21 @@ public class UsersViewModel extends AndroidViewModel {
     private final UserRepository userRepository;
     private final ExecutorService executorService;
     private int currentPage = 0; // Track the current page
+    int limit = 6;
+    int offset = currentPage * limit;
 
     public void loadNextPage(Context context) {
         int limit = 6;
         int offset = currentPage * limit;
 
-            userRepository.getUsersWithPagination(limit, offset).observeForever(userEntities -> {
-                if (!userEntities.isEmpty()) {
+        userRepository.getUsersWithPagination(limit, offset).observeForever(userEntities -> {
+
                     currentPage++;
                     allUsers.addAll(userEntities);
                     usersLiveData.setValue(allUsers); // Update LiveData with new data
                     showAdapter(context);
-                }
+
+
             });
 
     }
@@ -98,6 +101,10 @@ public class UsersViewModel extends AndroidViewModel {
         return userRepository.searchUsers(query);
     }
 
+    public LiveData<UserEntity> getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
+
     public void updateUser(UserEntity updatedUser) {
         userRepository.update(new UserEntity(updatedUser.getId(), updatedUser.getFirst_name(), updatedUser.getLast_name(), updatedUser.getEmail(), updatedUser.getAvatar()));
         Toast.makeText(getApplication().getApplicationContext(), updatedUser.getFirst_name() + " " + updatedUser.getLast_name() + " updated successfully!", Toast.LENGTH_SHORT).show();
@@ -145,7 +152,6 @@ public class UsersViewModel extends AndroidViewModel {
     private void fetchInitialUsers(Context context) {
         // Start with the first page
         loadNextPage(context);
-
     }
 
     private void fetchUsers(Context context) {
@@ -166,8 +172,6 @@ public class UsersViewModel extends AndroidViewModel {
                 fetchUsersFromApi(context,1);
             }
         });
-
-
     }
 
     private void fetchUsersFromApi(Context context, int pageNumber) {

@@ -16,6 +16,18 @@
         android:layout_width="match_parent"
         android:layout_height="16dp" />
 
+    <!-- Add Edit User TextView -->
+    <TextView
+        android:id="@+id/update_user_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/update_user_title"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
     <!-- Avatar -->
     <ImageView
         android:id="@+id/user_avatar"
@@ -23,6 +35,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp" />
+
 
     <!-- Header: Display the first name and last name -->
     <TextView
@@ -35,25 +48,44 @@
         android:layout_gravity="center"
         android:paddingBottom="16dp" />
 
+    <!-- Label for Email -->
+    <TextView
+        android:id="@+id/label_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_email_edit_text_hint"
+        android:textColor="@color/white"
+        android:layout_marginBottom="4dp" />
+
     <!-- EditText for Email -->
     <EditText
         android:id="@+id/edit_text_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="@string/email_edit_text_hint"
         android:textColorHint="@color/white"
         android:background="@drawable/edit_text_border"
         android:textColor="@color/white"
         android:inputType="textEmailAddress"
         android:padding="8dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:enabled="false" />
+
+    <!-- Label for First Name -->
+    <TextView
+        android:id="@+id/label_first_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_firstname_edit_text_hint"
+        android:textColor="@color/white"
+        android:layout_marginBottom="4dp" />
 
     <!-- EditText for First Name -->
     <EditText
         android:id="@+id/edit_text_first_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="First Name"
+        android:hint="@string/firstname_edit_text_hint"
         android:textColorHint="@color/white"
         android:background="@drawable/edit_text_border"
         android:textColor="@color/white"
@@ -61,17 +93,45 @@
         android:padding="8dp"
         android:layout_marginBottom="8dp" />
 
+    <!-- Error Label for First Name -->
+    <TextView
+        android:id="@+id/error_label_first_name_update_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        android:text="@string/error_invalid_firstname" />
+
+    <!-- Label for Last Name -->
+    <TextView
+        android:id="@+id/label_last_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_lastname_edit_text_hint"
+        android:textColor="@color/white"
+        android:layout_marginBottom="4dp" />
+
     <!-- EditText for Last Name -->
     <EditText
         android:id="@+id/edit_text_last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Last Name"
+        android:hint="@string/lastname_edit_text_hint"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:inputType="textPersonName"
         android:background="@drawable/edit_text_border"
         android:padding="8dp" />
+
+    <!-- Error Label for Last Name -->
+    <TextView
+        android:id="@+id/error_label_last_name_update_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        android:text="@string/error_invalid_lastname" />
+
 
     <!-- Buttons -->
     <LinearLayout
@@ -86,8 +146,8 @@
             android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:backgroundTint="#fa1905"
+            android:text="@string/cancel_btn_text"
+            android:backgroundTint="@color/cancel_background_btn_tint"
             android:layout_marginEnd="16dp" />
 
         <!-- Update Button -->
@@ -95,8 +155,8 @@
             android:id="@+id/button_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#0760a8"
-            android:text="Update" />
+            android:backgroundTint="@color/add_background_btn_tint"
+            android:text="@string/update_btn_text" />
 
     </LinearLayout>
 </LinearLayout>

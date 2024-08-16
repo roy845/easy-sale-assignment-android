@@ -22,7 +22,7 @@ public interface  UserDao {
     @Delete
     void delete(UserEntity user);
 
-    @Query("SELECT * FROM users LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM users ORDER BY first_name ASC LIMIT :limit OFFSET :offset")
     LiveData<List<UserEntity>> getUsersWithPagination(int limit, int offset);
 
     @Query("SELECT * FROM users ORDER BY first_name ASC")
@@ -30,4 +30,10 @@ public interface  UserDao {
 
     @Query("SELECT * FROM users WHERE first_name LIKE :query OR last_name LIKE :query ORDER BY first_name ASC")
     LiveData<List<UserEntity>> searchUsers(String query);
+
+    @Query("SELECT * FROM users WHERE email = :userEmail LIMIT 1")
+    LiveData<UserEntity> getUserByEmail(String userEmail);
+
+    @Query("SELECT COUNT(*) FROM users") // Replace "user_table" with your actual table name if different
+    LiveData<Integer> getUserCount();
 }

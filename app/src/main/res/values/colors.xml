@@ -3,6 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#ff0000</color>
+    <color name="cancel_background_btn_tint">#fa1905</color>
+    <color name="add_background_btn_tint">#0760a8</color>
+    <color name="update_background_btn_tint">#0760a8</color>
+    <color name="retry_background_btn_tint">#0760a8</color>
+    <color name="fab_btn_color">#08821a</color>
     <color name="colorPrimary">#0044cc</color>
 
 </resources>

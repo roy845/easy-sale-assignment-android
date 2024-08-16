@@ -43,6 +43,12 @@ public class UserRepository {
         AppDatabase.databaseWriteExecutor.execute(() -> userDao.delete(user));
     }
 
+    public LiveData<UserEntity> getUserByEmail(String email) {
+       return userDao.getUserByEmail(email);
+    }
 
+    public LiveData<Integer> getUserCount() {
+        return userDao.getUserCount();
+    }
 
 }
